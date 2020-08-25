@@ -1,59 +1,6 @@
 import React from 'react';
-
-const numbers = [...Array(10).keys()];
-const functionKeys = ['+', '-', 'x', '÷', '%'];
-
-const Display = (props) => <div className="display">{props.number}</div>;
-const Button = (props) => <div className={props.className}>{props.name}</div>;
-
-class Keyboard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleNumberClick = this.handleNumberClick.bind(this);
-    this.handleSymbolClick = this.handleSymbolClick.bind(this);
-  }
-
-  handleNumberClick(e) {
-    const {setDisplayState, setNumberState} = this.props.clickHandlers();
-    const value = e.target.innerText;
-    setDisplayState(value);
-    setNumberState(value);
-  }
-
-  handleSymbolClick(e) {
-    const {
-      setDisplayState,
-      setNumber,
-      setSymbol,
-    } = this.props.clickHandlers();
-    const value = e.target.innerText;
-    setDisplayState(value);
-    setNumber();
-    setSymbol(value);
-  }
-
-  createKeyboardBtn(keys, handleClick) {
-    return keys.map((key) => (
-      <div className="button" key={key} onClick={handleClick}>
-        {key}
-      </div>
-    ));
-  }
-
-  render() {
-    return (
-      <div className="keyboard">
-        <Button className="button clrBtn" name="clr" />
-        <Button className="button delBtn" name="del" />
-        <div className="button" onClick={() => {}}>
-          =
-        </div>
-        {this.createKeyboardBtn(numbers, this.handleNumberClick)}
-        {this.createKeyboardBtn(functionKeys, this.handleSymbolClick)};
-      </div>
-    );
-  }
-}
+import Keyboard from './keyboard';
+import Display from './display';
 
 class Calc extends React.Component {
   constructor(props) {
@@ -65,27 +12,35 @@ class Calc extends React.Component {
       symbols: [],
       answer: null,
     };
-    this.setDisplayState = this.setDisplayState.bind(this);
-    this.setNumberState = this.setNumberState.bind(this);
-    this.setNumber = this.setNumber.bind(this);
-    this.setSymbol = this.setSymbol.bind(this);
-    this.setForAnswer = this.setForAnswer.bind(this);
+    this.handleNumberClick = this.handleNumberClick.bind(this);
+    this.handleSymbolClick = this.handleSymbolClick.bind(this);
     this.clickHandlers = this.clickHandlers.bind(this);
   }
 
-  setDisplayState(keyPressed) {
+  handleNumberClick(number) {
+    this.setDisplayState(number);
+    this.setNumberState(number);
+  }
+
+  handleSymbolClick(symbol) {
+    this.setDisplayState(symbol);
+    this.setNumber();
+    this.setSymbol(symbol);
+  }
+
+  setDisplayState(pressedKey) {
     this.setState((state) => {
       const { currDisplayState } = state;
       const newState =
-        currDisplayState === '0' ? keyPressed : currDisplayState + keyPressed;
+        currDisplayState === '0' ? pressedKey : currDisplayState + pressedKey;
       return { currDisplayState: newState };
     });
   }
 
-  setNumberState(keyPressed) {
+  setNumberState(number) {
     this.setState((state) => {
       const { currNumberState } = state;
-      return { currNumberState: currNumberState + keyPressed };
+      return { currNumberState: currNumberState + number };
     });
   }
 
@@ -95,15 +50,18 @@ class Calc extends React.Component {
       const numbers = number
         ? state.numbers.concat([Number(number)])
         : state.numbers;
-      return { numbers , currNumberState :''};
+      return { numbers, currNumberState: '' };
     });
   }
 
   setSymbol(symbolPressed) {
     this.setState((state) => {
-      const { symbols, numbers ,currDisplayState} = state;
+      const { symbols, numbers, currDisplayState } = state;
       if (symbols.length >= numbers.length) {
-        return { symbols: symbols.slice(0, -1).concat([symbolPressed]),currDisplayState:currDisplayState.slice(0,-2).concat(symbolPressed)};
+        return {
+          symbols: symbols.slice(0, -1).concat([symbolPressed]),
+          currDisplayState: currDisplayState.slice(0, -2).concat(symbolPressed),
+        };
       }
       return { symbols: symbols.concat([symbolPressed]) };
     });
@@ -121,11 +79,8 @@ class Calc extends React.Component {
 
   clickHandlers() {
     return {
-      setDisplayState: this.setDisplayState,
-      setNumberState: this.setNumberState,
-      setNumber: this.setNumber,
-      setSymbol: this.setSymbol,
-      setForAnswer: this.setForAnswer,
+      handleNumberClick: this.handleNumberClick,
+      handleSymbolClick: this.handleSymbolClick,
     };
   }
 
@@ -133,7 +88,7 @@ class Calc extends React.Component {
     const { currDisplayState } = this.state;
     return (
       <div className="calc">
-        <Display number={`${currDisplayState}`} />
+        <Display expression={`${currDisplayState}`} />
         <Keyboard clickHandlers={this.clickHandlers} />
       </div>
     );
