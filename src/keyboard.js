@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, NumericKeys, OperationalKeys } from './buttons';
+import { NumericKeys, ArithmeticKeys, FunctionalKeys } from './keyboardComp';
 
 class Keyboard extends React.Component {
   constructor(props) {
@@ -26,11 +26,8 @@ class Keyboard extends React.Component {
           <NumericKeys onClick={this.onNumberClick} />
         </div>
         <div className="rightPanel">
-          <div className="topRightPanel">
-            <Button className="button clrBtn" name="clr" onClick={setDefault} />
-            <Button className="button evalBtn" name="=" onClick={showResult} />
-          </div>
-          <OperationalKeys onClick={this.onSymbolClick} />
+          <FunctionalKeys setDefault={setDefault} showResult={showResult}/>
+          <ArithmeticKeys onClick={this.onSymbolClick} />
         </div>
       </div>
     );

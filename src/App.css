@@ -1,21 +1,21 @@
 .calc {
   border: 2px solid black;
-  width: 30vw;
-  margin: 10vh auto;
+  width: 400px;
+  margin: 100px auto;
   border-radius: 8px;
   padding: 6px;
 }
 
 .display {
   border: 2px solid red;
-  height: 12vh;
+  height: 60px;
 }
 
 .keyboard {
   display: flex;
   justify-content: space-between;
   padding: 4px;
-  height: 40vh;
+  height: 200px;
 }
 
 .leftPanel {
@@ -28,7 +28,7 @@
 
 .numKeys {
   display: grid;
-  grid-template-rows: repeat(4, 10vh);
+  grid-template-rows: repeat(4, 50px);
   grid-template-columns: repeat(3, calc(100%/3));
 }
 
@@ -38,18 +38,18 @@
   padding: 8px;
 }
 
-.topRightPanel {
+.funcKeys {
   display: flex;
 }
 
-.topRightPanel > div {
+.funcKeys > div {
   width:48%;
-  height:6vh;
+  height:30px;
 }
 
 .oprKeys {
   padding-top:10px;
   display:grid;
-  grid-template-rows: repeat(2, 13vh);
+  grid-template-rows: repeat(2, 65px);
   grid-template-columns: repeat(2, 50%);
 }

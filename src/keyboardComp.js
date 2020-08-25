@@ -19,13 +19,22 @@ const NumericKeys = function (props) {
   return <div className="numKeys">{createKeys(keys, props.onClick)}</div>;
 };
 
-const OperationalKeys = function (props) {
+const ArithmeticKeys = function (props) {
   const keys = ['+', '-', '/', '*'];
   return <div className="oprKeys">{createKeys(keys, props.onClick)}</div>;
 };
 
+const FunctionalKeys = function (props) {
+  return (
+    <div className="funcKeys">
+      <Button className="button clrBtn" name="clr" onClick={props.setDefault} />
+      <Button className="button evalBtn" name="=" onClick={props.showResult} />
+    </div>
+  );
+}
+
 export {
-  Button,
   NumericKeys,
-  OperationalKeys
+  ArithmeticKeys,
+  FunctionalKeys
 }
