@@ -6,8 +6,8 @@ class Calc extends React.Component {
   constructor(props) {
     super(props);
     this.state = { currDisplayState: '' };
-    this.handleNumberClick = this.handleNumberClick.bind(this);
-    this.handleSymbolClick = this.handleSymbolClick.bind(this);
+    this.onNumberClick = this.onNumberClick.bind(this);
+    this.onSymbolClick = this.onSymbolClick.bind(this);
     this.showResult = this.showResult.bind(this);
     this.setDefault = this.setDefault.bind(this);
   }
@@ -60,28 +60,34 @@ class Calc extends React.Component {
     });
   }
 
+  getResult(state) {
+    const expression = state.numbers
+      .flatMap((num, index) => [num, state.symbols[index]])
+      .join('');
+    return eval(expression);
+  }
+
   showResult() {
     this.setNumber();
     this.setState((state) => {
-      const exp = state.numbers
-        .flatMap((num, index) => [num, state.symbols[index]])
-        .join('');
-      const answer = eval(exp);
+      const result = this.getResult(state);
       return {
-        currDisplayState: answer,
-        currNumberState: answer,
+        currDisplayState: result,
+        currNumberState: result,
         numbers: [],
         symbols: [],
       };
     });
   }
 
-  handleNumberClick(number) {
+  onNumberClick(event) {
+    const number = event.target.id;
     this.setDisplayState(number);
     this.setNumberState(number);
   }
 
-  handleSymbolClick(symbol) {
+  onSymbolClick(event) {
+    const symbol = event.target.id;
     this.setDisplayState(symbol);
     this.setNumber();
     this.setSymbol(symbol);
@@ -89,8 +95,8 @@ class Calc extends React.Component {
 
   get clickHandlers() {
     return {
-      handleNumberClick: this.handleNumberClick,
-      handleSymbolClick: this.handleSymbolClick,
+      onNumberClick: this.onNumberClick,
+      onSymbolClick: this.onSymbolClick,
       showResult: this.showResult,
       setDefault: this.setDefault,
     };

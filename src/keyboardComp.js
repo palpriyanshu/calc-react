@@ -8,7 +8,7 @@ const Button = (props) => (
 
 const createKeys = function (keys, handleClick) {
   return keys.map((key) => (
-    <div className="button" key={key} name={key} onClick={handleClick}>
+    <div id={key} className="button" key={key} onClick={handleClick}>
       {key}
     </div>
   ));
