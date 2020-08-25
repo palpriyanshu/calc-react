@@ -5,42 +5,35 @@ import Display from './display';
 class Calc extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currDisplayState: '0',
+    this.state = { currDisplayState: '' };
+    this.handleNumberClick = this.handleNumberClick.bind(this);
+    this.handleSymbolClick = this.handleSymbolClick.bind(this);
+    this.showResult = this.showResult.bind(this);
+    this.setDefault = this.setDefault.bind(this);
+  }
+
+  setDefault() {
+    this.setState(() => ({
+      currDisplayState: '',
       currNumberState: '',
       numbers: [],
       symbols: [],
-    };
-    this.handleNumberClick = this.handleNumberClick.bind(this);
-    this.handleSymbolClick = this.handleSymbolClick.bind(this);
-    this.handleEval = this.handleEval.bind(this);
-    this.clickHandlers = this.clickHandlers.bind(this);
+    }));
   }
 
-  handleNumberClick(number) {
-    this.setDisplayState(number);
-    this.setNumberState(number);
-  }
-
-  handleSymbolClick(symbol) {
-    this.setDisplayState(symbol);
-    this.setNumber();
-    this.setSymbol(symbol);
+  componentDidMount() {
+    this.setDefault();
   }
 
   setDisplayState(pressedKey) {
     this.setState((state) => {
-      const { currDisplayState } = state;
-      const newState =
-        currDisplayState === '0' ? pressedKey : currDisplayState + pressedKey;
-      return { currDisplayState: newState };
+      return { currDisplayState: state.currDisplayState + pressedKey };
     });
   }
 
   setNumberState(number) {
     this.setState((state) => {
-      const { currNumberState } = state;
-      return { currNumberState: currNumberState + number };
+      return { currNumberState: state.currNumberState + number };
     });
   }
 
@@ -67,7 +60,7 @@ class Calc extends React.Component {
     });
   }
 
-  handleEval() {
+  showResult() {
     this.setNumber();
     this.setState((state) => {
       const exp = state.numbers
@@ -76,17 +69,30 @@ class Calc extends React.Component {
       const answer = eval(exp);
       return {
         currDisplayState: answer,
-        numbers: [answer],
+        currNumberState: answer,
+        numbers: [],
         symbols: [],
       };
     });
   }
 
-  clickHandlers() {
+  handleNumberClick(number) {
+    this.setDisplayState(number);
+    this.setNumberState(number);
+  }
+
+  handleSymbolClick(symbol) {
+    this.setDisplayState(symbol);
+    this.setNumber();
+    this.setSymbol(symbol);
+  }
+
+  get clickHandlers() {
     return {
       handleNumberClick: this.handleNumberClick,
       handleSymbolClick: this.handleSymbolClick,
-      handleEval: this.handleEval,
+      showResult: this.showResult,
+      setDefault: this.setDefault,
     };
   }
 
