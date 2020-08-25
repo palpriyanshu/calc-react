@@ -10,10 +10,10 @@ class Calc extends React.Component {
       currNumberState: '',
       numbers: [],
       symbols: [],
-      answer: null,
     };
     this.handleNumberClick = this.handleNumberClick.bind(this);
     this.handleSymbolClick = this.handleSymbolClick.bind(this);
+    this.handleEval = this.handleEval.bind(this);
     this.clickHandlers = this.clickHandlers.bind(this);
   }
 
@@ -67,12 +67,17 @@ class Calc extends React.Component {
     });
   }
 
-  setForAnswer(answer) {
-    this.setState(() => {
+  handleEval() {
+    this.setNumber();
+    this.setState((state) => {
+      const exp = state.numbers
+        .flatMap((num, index) => [num, state.symbols[index]])
+        .join('');
+      const answer = eval(exp);
       return {
         currDisplayState: answer,
-        currNumberState: answer,
-        number: [answer],
+        numbers: [answer],
+        symbols: [],
       };
     });
   }
@@ -81,6 +86,7 @@ class Calc extends React.Component {
     return {
       handleNumberClick: this.handleNumberClick,
       handleSymbolClick: this.handleSymbolClick,
+      handleEval: this.handleEval,
     };
   }
 
